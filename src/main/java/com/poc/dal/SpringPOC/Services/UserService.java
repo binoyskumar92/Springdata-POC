@@ -6,9 +6,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class UserService {
@@ -20,8 +22,13 @@ public class UserService {
         return mongoTemplate.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return mongoTemplate.findAll(User.class);
+//    public List<User> getAllUsers() {
+//        return mongoTemplate.findAll(User.class);
+//    }
+
+    @Async
+    public CompletableFuture<List<User>> getAllUsers() {
+        return CompletableFuture.completedFuture(mongoTemplate.findAll(User.class));
     }
 
     public User getUserByEmail(String email) {
